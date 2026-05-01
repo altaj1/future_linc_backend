@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: future_linc_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: future_linc
+      POSTGRES_PASSWORD: future_linc
+      POSTGRES_DB: future_linc_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - future_linc_data:/var/lib/postgresql/data
+    networks:
+      - future_linc_network
+
+networks:
+  future_linc_network:
+    driver: bridge
+    name: future_linc_network
+
+volumes:
+  future_linc_data:
+    driver: local
+    name: future_linc_data
