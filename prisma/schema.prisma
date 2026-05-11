@@ -167,3 +167,21 @@ enum ContactStatus {
   RESOLVED
   ARCHIVED
 }
+
+model About {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  section         String   @unique
+  title           String?
+  content         String?  @db.Text
+  content2        String?  @db.Text
+  image1          String?
+  image1PublicId  String?
+  image2          String?
+  image2PublicId  String?
+  videoUrl        String?
+  
+  isDeleted   Boolean  @default(false)
+  deletedAt   DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

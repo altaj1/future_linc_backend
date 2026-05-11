@@ -10,7 +10,7 @@ import { EventModule } from "./modules/Event/EventModule";
 import { ContactModule } from "./modules/Contact/ContactModule";
 import { AchievementModule } from "./modules/Achievement/AchievementModule";
 import { TrackRecordModule } from "./modules/TrackRecord/TrackRecordModule";
-import { AboutContentModule } from "./modules/AboutContent/AboutContentModule";
+import { AboutModule } from "./modules/About/AboutModule";
 import { TestimonialModule } from "./modules/Testimonial/TestimonialModule";
 import { FaqModule } from "./modules/Faq/FaqModule";
 import { UniversityPartnerModule } from "./modules/UniversityPartner/UniversityPartnerModule";
@@ -35,7 +35,7 @@ async function bootstrap() {
     app.registerModule(new ContactModule());
     app.registerModule(new AchievementModule());
     app.registerModule(new TrackRecordModule());
-    app.registerModule(new AboutContentModule());
+    app.registerModule(new AboutModule());
     app.registerModule(new TestimonialModule());
     app.registerModule(new FaqModule());
     app.registerModule(new UniversityPartnerModule());

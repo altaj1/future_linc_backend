@@ -1,27 +1,28 @@
 import { Request, Response } from 'express';
 import { BaseController } from '@/core/BaseController';
-import { AboutContentService } from './aboutContent.service';
+import { AboutService } from './about.service';
 import { HTTPStatusCode } from '@/types/HTTPStatusCode';
 
-export class AboutContentController extends BaseController {
-    constructor(private service: AboutContentService) {
+export class AboutController extends BaseController {
+    constructor(private service: AboutService) {
         super();
     }
 
     /**
-     * Create a new AboutContent
+     * Create a new About
      */
     public create = async (req: Request, res: Response) => {
         const body = req.validatedBody;
         this.logAction('create', req, { body });
         
-        const result = await this.service.create(body);
+        const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
+        const result = await this.service.create(body, files);
         
-        return this.sendCreatedResponse(res, result, 'AboutContent created successfully');
+        return this.sendCreatedResponse(res, result, 'About created successfully');
     };
 
     /**
-     * Get all AboutContents
+     * Get all Abouts
      */
     public getAll = async (req: Request, res: Response) => {
         const pagination = this.extractPaginationParams(req);
@@ -39,13 +40,13 @@ export class AboutContentController extends BaseController {
                 hasNext: result.hasNext,
                 hasPrevious: result.hasPrevious
             }, 
-            'AboutContents retrieved successfully', 
+            'Abouts retrieved successfully', 
             result.data
         );
     };
 
     /**
-     * Get single AboutContent
+     * Get single About
      */
     public getOne = async (req: Request, res: Response) => {
         const { id } = req.validatedParams;
@@ -54,14 +55,14 @@ export class AboutContentController extends BaseController {
         const result = await this.service.findById(id);
 
         if (!result) {
-            return this.sendResponse(res, 'AboutContent not found', HTTPStatusCode.NOT_FOUND);
+            return this.sendResponse(res, 'About not found', HTTPStatusCode.NOT_FOUND);
         }
 
-        return this.sendResponse(res, 'AboutContent retrieved successfully', HTTPStatusCode.OK, result);
+        return this.sendResponse(res, 'About retrieved successfully', HTTPStatusCode.OK, result);
     };
 
     /**
-     * Update AboutContent
+     * Update About
      */
     public update = async (req: Request, res: Response) => {
         const { id } = req.validatedParams;
@@ -70,16 +71,17 @@ export class AboutContentController extends BaseController {
         
         const exists = await this.service.exists({ id });
         if (!exists) {
-            return this.sendResponse(res, 'AboutContent not found', HTTPStatusCode.NOT_FOUND);
+            return this.sendResponse(res, 'About not found', HTTPStatusCode.NOT_FOUND);
         }
 
-        const result = await this.service.updateById(id, body);
+        const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
+        const result = await this.service.updateById(id, body, files);
         
-        return this.sendResponse(res, 'AboutContent updated successfully', HTTPStatusCode.OK, result);
+        return this.sendResponse(res, 'About updated successfully', HTTPStatusCode.OK, result);
     };
 
     /**
-     * Delete AboutContent
+     * Delete About
      */
     public delete = async (req: Request, res: Response) => {
         const { id } = req.validatedParams;
@@ -87,11 +89,11 @@ export class AboutContentController extends BaseController {
         
         const exists = await this.service.exists({ id });
         if (!exists) {
-            return this.sendResponse(res, 'AboutContent not found', HTTPStatusCode.NOT_FOUND);
+            return this.sendResponse(res, 'About not found', HTTPStatusCode.NOT_FOUND);
         }
 
         await this.service.deleteById(id);
         
-        return this.sendResponse(res, 'AboutContent deleted successfully', HTTPStatusCode.OK);
+        return this.sendResponse(res, 'About deleted successfully', HTTPStatusCode.OK);
     };
 }
