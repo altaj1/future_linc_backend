@@ -15,7 +15,8 @@ import { TestimonialModule } from "./modules/Testimonial/TestimonialModule";
 import { FaqModule } from "./modules/Faq/FaqModule";
 import { UniversityPartnerModule } from "./modules/UniversityPartner/UniversityPartnerModule";
 import { UserModule } from "./modules/User/UserModule";
-
+import { CommitmentModule } from "./modules/Commitment/CommitmentModule";
+import { ClientSayModule } from "./modules/ClientSay/ClientSayModule";
 // Main application bootstrap function
 async function bootstrap() {
   try {
@@ -40,7 +41,8 @@ async function bootstrap() {
     app.registerModule(new FaqModule());
     app.registerModule(new UniversityPartnerModule());
     app.registerModule(new UserModule());
-
+    app.registerModule(new ClientSayModule());
+    app.registerModule(new CommitmentModule());
     AppLogger.info("✔ All modules registered successfully");
 
     // Start the server

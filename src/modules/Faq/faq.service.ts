@@ -23,24 +23,9 @@ export class FaqService extends BaseService<
 
   public async create(
     data: CreateFaqInput,
-    imageFile?: Express.Multer.File,
     include?: any,
   ) {
-    let imageData: any = undefined;
-    if (imageFile) {
-      const uploaded = await uploadToLocal(
-        `faq-${Date.now()}`,
-        imageFile.path,
-        "faqs",
-      );
-      imageData = uploaded;
-    }
-    const faqData = {
-      ...data,
-      image: imageData?.url,
-      imagePublicId: imageData?.publicId,
-    };
-    return super.create(faqData, include);
+    return super.create(data, include);
   }
 
   public async findMany(
@@ -59,18 +44,41 @@ export class FaqService extends BaseService<
   public async updateById(
     id: string,
     data: UpdateFaqInput,
-    imageFile?: Express.Multer.File,
     include?: any,
   ) {
-    const existingRecord = await this.findById(id);
+    return super.updateById(id, data as any, include);
+  }
+
+  public async deleteById(id: string) {
+    return super.deleteById(id);
+  }
+
+  public async exists(filters: any) {
+    return super.exists(filters);
+  }
+
+  public async getFaqSection() {
+    let section = await this.prisma.faqSection.findFirst();
+    if (!section) {
+      section = await this.prisma.faqSection.create({
+        data: { title: "FREQUENTLY ASKED QUESTIONS" },
+      });
+    }
+    return section;
+  }
+
+  public async updateFaqSection(data: any, imageFile?: Express.Multer.File) {
+    const section = await this.getFaqSection();
     let imageData: any = undefined;
+
     if (imageFile) {
-      if (existingRecord && existingRecord.imagePublicId) {
-        await deleteLocalFile(existingRecord.imagePublicId, "faqs");
+      if (section.imagePublicId) {
+        await deleteLocalFile(section.imagePublicId, "faqs");
       }
-      const uploaded = await uploadToLocal(`faq-${id}`, imageFile.path, "faqs");
+      const uploaded = await uploadToLocal(`faq-section-${Date.now()}`, imageFile.path, "faqs");
       imageData = uploaded;
     }
+
     const updateData = {
       ...data,
       ...(imageData && {
@@ -78,19 +86,23 @@ export class FaqService extends BaseService<
         imagePublicId: imageData.publicId,
       }),
     };
-    return super.updateById(id, updateData as any, include);
+
+    return this.prisma.faqSection.update({
+      where: { id: section.id },
+      data: updateData,
+    });
   }
 
-  public async deleteById(id: string) {
-    const existingRecord = await this.findById(id);
-    const result = await super.deleteById(id);
-    if (existingRecord && existingRecord.imagePublicId) {
-      await deleteLocalFile(existingRecord.imagePublicId, "faqs");
-    }
-    return result;
-  }
+  public async getContent() {
+    const section = await this.getFaqSection();
+    const faqs = await this.prisma.faq.findMany({
+      orderBy: { createdAt: 'asc' }
+    });
 
-  public async exists(filters: any) {
-    return super.exists(filters);
+    return {
+      Title: section.title,
+      image: section.image,
+      faq: faqs.map(f => ({ qu: f.question, ans: f.answer }))
+    };
   }
 }

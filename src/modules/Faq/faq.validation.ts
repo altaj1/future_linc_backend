@@ -14,6 +14,9 @@ export const FaqValidation = {
             id: z.string().uuid('Invalid Faq ID format'),
         }),
     },
+    updateSection: z.object({
+        title: z.string().optional(),
+    }),
 };
 
 export type CreateFaqInput = z.infer<typeof FaqValidation.create>;

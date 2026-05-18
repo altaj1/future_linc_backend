@@ -146,7 +146,7 @@ export const uploadToLocal = async (
     // Construct the live URL
     const relativePath = `uploads/${subFolder}/${fileName}`;
     const liveUrl = `${config.server.baseUrl}/${relativePath}`;
-
+    console.log(config.server.baseUrl);
     return {
       url: liveUrl,
       publicId: fileName,

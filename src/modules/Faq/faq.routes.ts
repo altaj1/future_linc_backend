@@ -22,12 +22,17 @@ export class FaqRoutes {
             body: FaqValidation.update 
         });
         const idValidator = validateRequest({ params: FaqValidation.params.id });
+        const updateSectionValidator = validateRequest({ body: FaqValidation.updateSection });
 
         // Define Routes
-        this.router.post('/', upload.single('image'), createValidator, asyncHandler((req, res) => this.controller.create(req, res)));
+        this.router.get('/content', asyncHandler((req, res) => this.controller.getContent(req, res)));
+        this.router.get('/section', asyncHandler((req, res) => this.controller.getSection(req, res)));
+        this.router.patch('/section', upload.single('image'), updateSectionValidator, asyncHandler((req, res) => this.controller.updateSection(req, res)));
+
+        this.router.post('/', createValidator, asyncHandler((req, res) => this.controller.create(req, res)));
         this.router.get('/', asyncHandler((req, res) => this.controller.getAll(req, res)));
         this.router.get('/:id', idValidator, asyncHandler((req, res) => this.controller.getOne(req, res)));
-        this.router.patch('/:id', upload.single('image'), updateValidator, asyncHandler((req, res) => this.controller.update(req, res)));
+        this.router.patch('/:id', updateValidator, asyncHandler((req, res) => this.controller.update(req, res)));
         this.router.delete('/:id', idValidator, asyncHandler((req, res) => this.controller.delete(req, res)));
     }
 

@@ -3,7 +3,7 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
-
+import path from "path";
 import { AppError, RateLimitError, TimeoutError } from "./errors/AppError";
 import { errorHandler } from "./errors/errorHandler";
 
@@ -40,18 +40,29 @@ export class IgnitorApp {
     this.app.use(requestId());
 
     // Security middlewares
+    // this.app.use(
+    //   helmet({
+    //     contentSecurityPolicy: config.server.isProduction,
+    //     crossOriginEmbedderPolicy: config.server.isProduction,
+    //   }),
+    // );
     this.app.use(
       helmet({
         contentSecurityPolicy: config.server.isProduction,
-        crossOriginEmbedderPolicy: config.server.isProduction,
+        crossOriginEmbedderPolicy: false,
+        crossOriginResourcePolicy: false,
       }),
     );
+    // this.app.use(
+    //   "/api/uploads",
+    //   express.static(path.join(process.cwd(), "uploads")),
+    // );
+    // CORS
+    // Static files (must be before routes)
     this.app.use(
-      "/api/uploads",
+      "/uploads",
       express.static(path.join(process.cwd(), "uploads")),
     );
-    // CORS
-
     this.app.use(
       cors({
         origin: (origin, callback) => {

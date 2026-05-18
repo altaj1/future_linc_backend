@@ -12,8 +12,7 @@ export class FaqController extends BaseController {
         const body = req.validatedBody;
         this.logAction('create', req, { body });
         
-        const imageFile = req.file;
-        const result = await this.service.create(body, imageFile);
+        const result = await this.service.create(body);
         
         return this.sendCreatedResponse(res, result, 'Faq created successfully');
     };
@@ -62,8 +61,7 @@ export class FaqController extends BaseController {
             return this.sendResponse(res, 'Faq not found', HTTPStatusCode.NOT_FOUND);
         }
 
-        const imageFile = req.file;
-        const result = await this.service.updateById(id, body, imageFile);
+        const result = await this.service.updateById(id, body);
         
         return this.sendResponse(res, 'Faq updated successfully', HTTPStatusCode.OK, result);
     };
@@ -80,5 +78,25 @@ export class FaqController extends BaseController {
         await this.service.deleteById(id);
         
         return this.sendResponse(res, 'Faq deleted successfully', HTTPStatusCode.OK);
+    };
+
+    public getSection = async (req: Request, res: Response) => {
+        this.logAction('getSection', req);
+        const result = await this.service.getFaqSection();
+        return this.sendResponse(res, 'Faq section retrieved successfully', HTTPStatusCode.OK, result);
+    };
+
+    public updateSection = async (req: Request, res: Response) => {
+        const body = req.validatedBody || req.body;
+        this.logAction('updateSection', req, { body });
+        const imageFile = req.file;
+        const result = await this.service.updateFaqSection(body, imageFile);
+        return this.sendResponse(res, 'Faq section updated successfully', HTTPStatusCode.OK, result);
+    };
+
+    public getContent = async (req: Request, res: Response) => {
+        this.logAction('getContent', req);
+        const result = await this.service.getContent();
+        return this.sendResponse(res, 'Faq content retrieved successfully', HTTPStatusCode.OK, result);
     };
 }
