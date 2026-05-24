@@ -17,6 +17,8 @@ import { UniversityPartnerModule } from "./modules/UniversityPartner/UniversityP
 import { UserModule } from "./modules/User/UserModule";
 import { CommitmentModule } from "./modules/Commitment/CommitmentModule";
 import { ClientSayModule } from "./modules/ClientSay/ClientSayModule";
+import { WhyFuturelincModule } from "./modules/WhyFuturelinc/WhyFuturelincModule";
+ import { StudentsExperienceModule } from './modules/StudentsExperience/StudentsExperienceModule';
 // Main application bootstrap function
 async function bootstrap() {
   try {
@@ -43,6 +45,8 @@ async function bootstrap() {
     app.registerModule(new UserModule());
     app.registerModule(new ClientSayModule());
     app.registerModule(new CommitmentModule());
+    app.registerModule(new WhyFuturelincModule());
+    app.registerModule(new StudentsExperienceModule());
     AppLogger.info("✔ All modules registered successfully");
 
     // Start the server

@@ -54,7 +54,10 @@ export class CountryService extends BaseService<
     orderBy?: any,
     include?: any,
   ) {
-    return super.findMany(filters, pagination, orderBy, include);
+    return super.findMany(filters, pagination, orderBy, {
+      ...include,
+      universities: true, // Include related universities by default
+    });
   }
 
   public async findById(id: string, include?: any) {

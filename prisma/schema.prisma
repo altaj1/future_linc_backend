@@ -27,29 +27,58 @@ enum OTPType {
   two_factor
 }
 
+// model User {
+//   id                    String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   email                 String           @unique
+//   username              String?          @unique
+//   firstName             String
+//   lastName              String
+//   displayName           String?
+//   role                  UserRole         @default(user)
+//   status                AccountStatus    @default(pending_verification)
+//   password              String
+//   emailVerifiedAt       DateTime?
+//   bio                   String?
+//   avatarUrl             String?
+//   imagePublicId String?
+//   universityId          String?
+//   university            UniversityPartner? @relation(fields: [universityId], references: [id])
+
+//   isDeleted             Boolean          @default(false)
+//   lastLoginAt           DateTime?
+//   createdAt             DateTime         @default(now())
+//   updatedAt             DateTime         @default(now()) @updatedAt
+//   deletedAt             DateTime?
+//   otps                  OTP[]
+//   clientSays            ClientSay[]
+// }
 model User {
-  id                    String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email                 String           @unique
-  username              String?          @unique
+  id                    String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                 String              @unique
+  username              String?             @unique
   firstName             String
   lastName              String
   displayName           String?
-  role                  UserRole         @default(user)
-  status                AccountStatus    @default(pending_verification)
+  role                  UserRole            @default(user)
+  status                AccountStatus       @default(pending_verification)
   password              String
   emailVerifiedAt       DateTime?
   bio                   String?
   avatarUrl             String?
-  imagePublicId String?
-  isDeleted             Boolean          @default(false)
+  imagePublicId         String?
+
+  universityId          String?             @db.Uuid
+  university            UniversityPartner?  @relation(fields: [universityId], references: [id])
+
+  isDeleted             Boolean             @default(false)
   lastLoginAt           DateTime?
-  createdAt             DateTime         @default(now())
-  updatedAt             DateTime         @default(now()) @updatedAt
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @default(now()) @updatedAt
   deletedAt             DateTime?
   otps                  OTP[]
   clientSays            ClientSay[]
+  studentsExperiences   StudentsExperience[]
 }
-
 model OTP {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   identifier String
@@ -95,15 +124,6 @@ model Service {
   updatedAt   DateTime @updatedAt
 }
 
-model Country {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String
-  flag        String?
-  imagePublicId String?
-  description String?  @db.Text
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
 
 model Testimonial {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -134,14 +154,26 @@ model Faq {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
-model UniversityPartner {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String
-  logo      String?
+model Country {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  flag        String?
   imagePublicId String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  description String?  @db.Text
+  universities UniversityPartner[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model UniversityPartner {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  logo        String?
+  imagePublicId String?
+  countryId   String   @db.Uuid
+  country     Country  @relation(fields: [countryId], references: [id])
+  users       User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Event {
@@ -219,4 +251,31 @@ model About {
      deletedAt   DateTime?
      createdAt   DateTime @default(now())
      updatedAt   DateTime @updatedAt
+   }
+
+    model WhyFuturelinc {
+     id          String   @id @default(uuid())
+     title        String
+     description String?
+     thambnail   String?
+     imagePublicId String?
+     videoUrl    String?
+     status      String   @default("active")
+     isDeleted   Boolean  @default(false)
+     deletedAt   DateTime?
+     createdAt   DateTime @default(now())
+     updatedAt   DateTime @updatedAt
+   }
+   model StudentsExperience {
+     id            String   @id @default(uuid())
+     thambnail     String?
+     imagePublicId String?
+     videoUrl      String?
+     userId        String?  @db.Uuid
+     user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+     status        String   @default("active")
+     isDeleted     Boolean  @default(false)
+     deletedAt     DateTime?
+     createdAt     DateTime @default(now())
+     updatedAt     DateTime @updatedAt
    }
