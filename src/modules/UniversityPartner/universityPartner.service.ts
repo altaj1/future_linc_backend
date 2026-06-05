@@ -52,7 +52,10 @@ export class UniversityPartnerService extends BaseService<
     orderBy?: any,
     include?: any,
   ) {
-    return super.findMany(filters, pagination, orderBy, include);
+    return super.findMany(filters, pagination, orderBy, {
+      ...include,
+      country: true,
+    });
   }
 
   public async findById(id: string, include?: any) {

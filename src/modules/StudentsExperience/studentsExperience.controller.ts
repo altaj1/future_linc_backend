@@ -12,37 +12,20 @@ export class StudentsExperienceController extends BaseController {
    * Upsert StudentsExperience — creates a new record if none exists, otherwise updates the existing one.
    * Only one record is ever kept in the database.
    */
-  public upsert = async (req: Request, res: Response) => {
+  public create = async (req: Request, res: Response) => {
     const body = req.validatedBody;
     const imageFile = req.file;
     const userId = this.getUserId(req);
-    this.logAction("upsert", req, { body, userId });
+    this.logAction("create", req, { body, userId });
 
     const count = await this.service.getCount();
 
-    if (count === 0) {
-      // No record yet — create
-      const result = await this.service.create(body, imageFile);
-      return this.sendCreatedResponse(
-        res,
-        result,
-        "StudentsExperience created successfully",
-      );
-    } else {
-      // Record exists — fetch and update it
-      const existing = await this.service.findFirst();
-      const result = await this.service.updateById(
-        existing.id,
-        body,
-        imageFile,
-      );
-      return this.sendResponse(
-        res,
-        "StudentsExperience updated successfully",
-        HTTPStatusCode.OK,
-        result,
-      );
-    }
+    const result = await this.service.create(body, imageFile);
+    return this.sendCreatedResponse(
+      res,
+      result,
+      "StudentsExperience created successfully",
+    );
   };
 
   /**
@@ -69,6 +52,19 @@ export class StudentsExperienceController extends BaseController {
     );
   };
 
+  public findMany = async (req: Request, res: Response) => {
+    const filters = req.validatedQuery || {};
+    this.logAction("findMany", req, { filters });
+
+    const results = await this.service.findMany(filters);
+
+    return this.sendResponse(
+      res,
+      "StudentsExperience records retrieved successfully",
+      HTTPStatusCode.OK,
+      results,
+    );
+  };
   /**
    * Delete StudentsExperience by ID (admin cleanup)
    */

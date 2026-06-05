@@ -30,13 +30,13 @@ export class StudentsExperienceRoutes {
       authenticate, // Protect the upsert route
       upload.single("image"),
       upsertValidator,
-      asyncHandler((req, res) => this.controller.upsert(req, res)),
+      asyncHandler((req, res) => this.controller.create(req, res)),
     );
 
     // Get the single StudentsExperience record
     this.router.get(
       "/",
-      asyncHandler((req, res) => this.controller.getOne(req, res)),
+      asyncHandler((req, res) => this.controller.findMany(req, res)),
     );
 
     // Delete by ID (admin cleanup)

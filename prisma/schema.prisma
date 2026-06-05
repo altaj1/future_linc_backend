@@ -27,31 +27,7 @@ enum OTPType {
   two_factor
 }
 
-// model User {
-//   id                    String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-//   email                 String           @unique
-//   username              String?          @unique
-//   firstName             String
-//   lastName              String
-//   displayName           String?
-//   role                  UserRole         @default(user)
-//   status                AccountStatus    @default(pending_verification)
-//   password              String
-//   emailVerifiedAt       DateTime?
-//   bio                   String?
-//   avatarUrl             String?
-//   imagePublicId String?
-//   universityId          String?
-//   university            UniversityPartner? @relation(fields: [universityId], references: [id])
 
-//   isDeleted             Boolean          @default(false)
-//   lastLoginAt           DateTime?
-//   createdAt             DateTime         @default(now())
-//   updatedAt             DateTime         @default(now()) @updatedAt
-//   deletedAt             DateTime?
-//   otps                  OTP[]
-//   clientSays            ClientSay[]
-// }
 model User {
   id                    String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email                 String              @unique
@@ -161,6 +137,7 @@ model Country {
   imagePublicId String?
   description String?  @db.Text
   universities UniversityPartner[]
+  events      Event[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -180,10 +157,14 @@ model Event {
   id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title         String
   description   String   @db.Text
-  date          DateTime
+  date          DateTime?
+  strtTime      String?
+  endTime       String?
   location      String?
   image         String?
   imagePublicId String?
+  countryId   String   @db.Uuid
+  country     Country  @relation(fields: [countryId], references: [id])
   isPublished   Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

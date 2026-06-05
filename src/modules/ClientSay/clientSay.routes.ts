@@ -30,7 +30,7 @@ export class ClientSayRoutes {
     // Define Routes
     this.router.post(
       "/",
-      authenticate,
+      // authenticate,
       createValidator,
       asyncHandler((req, res) => this.controller.create(req, res)),
     );

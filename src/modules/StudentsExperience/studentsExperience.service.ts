@@ -2,6 +2,7 @@ import { BaseService } from "@/core/BaseService";
 import { PrismaClient } from "@/generated/prisma/client";
 import { UpsertStudentsExperienceInput } from "./studentsExperience.validation";
 import { uploadToLocal, deleteLocalFile } from "@/utils/localupload";
+import { PaginationOptions } from "@/types/types";
 
 export class StudentsExperienceService extends BaseService<
   any,
@@ -64,6 +65,15 @@ export class StudentsExperienceService extends BaseService<
     };
 
     return super.create(createData, include);
+  }
+
+  public async findMany(
+    filters: any = {},
+    pagination?: Partial<PaginationOptions>,
+    orderBy?: Record<string, "asc" | "desc">,
+    include?: any,
+  ) {
+    return super.findMany(filters, pagination, orderBy, include);
   }
 
   /**

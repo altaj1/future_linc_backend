@@ -10,9 +10,9 @@ export const ContactValidation = {
       address: z.string().optional(),
       message: z.string().min(10, "Message must be at least 10 characters"),
       status: z
-        .enum(["pending", "resolved", "archived"])
+        .enum(["PENDING", "RESOLVED", "ARCHIVED"])
         .optional()
-        .default("pending"),
+        .default("PENDING"),
     })
     .strict(),
 
@@ -24,7 +24,7 @@ export const ContactValidation = {
       phone: z.string().optional(),
       address: z.string().optional(),
       message: z.string().optional(),
-      status: z.enum(["pending", "resolved", "archived"]).optional(),
+      status: z.enum(["PENDING", "RESOLVED", "ARCHIVED"]).optional(),
     })
     .strict(),
 
