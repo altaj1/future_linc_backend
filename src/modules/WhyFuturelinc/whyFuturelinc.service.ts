@@ -94,7 +94,7 @@ export class WhyFuturelincService extends BaseService<
       );
       imageData = uploaded;
     }
-
+    // console.log(object);
     const updateData: any = {
       ...data,
       title: data.title, // map to DB field (capital T)
@@ -103,9 +103,9 @@ export class WhyFuturelincService extends BaseService<
         imagePublicId: imageData.publicId,
       }),
     };
-
+    console.log(updateData);
     // Remove the lowercase 'title' key since DB uses 'Title'
-    delete updateData.title;
+    // delete updateData.title;
 
     return super.updateById(id, updateData, include);
   }
